@@ -3,10 +3,15 @@ const app = express();
 const port = 3000;
 const db = require("./app/models");
 const dbconfig = require("./app/config/db.config");
+const bodyparser = require("body-parser");
+
 
 app.listen(port,()=>{
     console.log("App is runnion on port number " + port);
 });
+
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: true }));
 
 app.get("/",(req,res)=>{
     res.send("Welcome to Authentication and Authorization");
