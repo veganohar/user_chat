@@ -13,8 +13,7 @@ exports.signup = async (req,res)=>{
         user[p] = obj[p];
     };
     user.password = bcrypt.hashSync(obj.password, 8);
-    let secretCode = await cryptoRandomString({length: 128});
-    console.log(secretCode);
+    let secretCode = await cryptoRandomString(128);
     user.secretCode = secretCode;
     user.save((err,response)=>{
         if(err){
@@ -26,7 +25,7 @@ exports.signup = async (req,res)=>{
               to: response.email,   
               subject: 'Email Verification for USer Chat App',
               text: 'That was easy!',
-              html: `<p>Click <a href="${config.url}/verification/verify-account/${response.id}/${secretCode}">here</a> to Verify your account</p>`
+              html: `<p>Click <a href="${config.url}verification/verify-account/${response.id}/${secretCode}">here</a> to Verify your account</p>`
             };
             transporter.sendMail(mailData,(err,info)=>{
                 if(err){
@@ -39,6 +38,29 @@ exports.signup = async (req,res)=>{
 
 exports.signin = (req,res)=>{
 
+}
+
+
+exports.verify = (req,res)=>{
+    let uid = req.params.uid;
+    let secretCode = req.params.secretCode;
+    User.findOne({_id:uid},(err,user)=>{
+        if(err){
+           return res.render('verify-error',{error:err});
+        }
+        if(!user){
+            return res.render('verify-error',{error:"User Not Found"});
+        }
+        if(secretCode!==user.secretCode){
+            return res.render('verify-error',{error:"Invalid Secret Code"});
+        }
+        User.updateOne({_id:uid},{$set:{isVerified:true},$unset:{secretCode:secretCode}},(err,response)=>{
+            if(err){
+                return res.render('verify-error',{error:err});
+             }
+             return res.render('verified');
+        })
+    })
 }
 
 

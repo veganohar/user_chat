@@ -10,6 +10,8 @@ app.listen(port,()=>{
     console.log("App is runnion on port number " + port);
 });
 
+
+app.set('view engine', 'ejs')
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
