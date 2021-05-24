@@ -33,3 +33,4 @@ db.mongoose.connect(`mongodb://${dbconfig.HOSTNAME}:${dbconfig.PORT}/${dbconfig.
 
 
 require("./app/routes/user.route")(app);
+require("./app/routes/messages.route")(app);
