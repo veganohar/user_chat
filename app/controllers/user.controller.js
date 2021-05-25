@@ -86,3 +86,14 @@ exports.verify = (req, res) => {
 
 
 
+exports.getAllUSersExceptSameUser = (req,res)=>{
+    User.find({_id:{"$ne":req.userId}},(err,users)=>{
+        if (err) {
+            return res.render('verify-error', { error: err });
+        }
+        res.status(201).send({
+            message:"Users Retrieved Successfully",
+            data:users
+        })
+    })
+}
